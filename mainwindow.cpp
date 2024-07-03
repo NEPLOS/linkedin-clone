@@ -10,6 +10,8 @@
 #include <ctime>
 #include "fill_the_form.h"
 #include "main_page.h"
+#include <QDir>
+
 
 bool have_an_ac = true;
 bool dark_mode = false;
@@ -27,9 +29,6 @@ MainWindow::MainWindow(QWidget *parent)
     srand(time(0));
 
     ui->setupUi(this);
-
-    this->setWindowTitle("Login");
-
     ui->AC->hide();
 
     ui->email_box->setPlaceholderText(" enter your email address...");
@@ -45,8 +44,12 @@ MainWindow::MainWindow(QWidget *parent)
         set_color();
     }
 
+    QString database_path = QDir::currentPath();
+
+    database_path = database_path + "/linkedin_C.db";
+
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("h:/Project/data/linkedin_C.db");
+    db.setDatabaseName(database_path);
     db.open();
 }
 
@@ -107,7 +110,6 @@ void MainWindow::on_AC_clicked()
     have_an_ac = true;
 }
 
-
 void MainWindow::on_pushButton_clicked()
 {
 
@@ -155,7 +157,6 @@ void MainWindow::on_pushButton_clicked()
 
                     QSqlQuery v;
 
-
                     if(r)
                     {
                         v.exec("DELETE FROM userdb");
@@ -168,6 +169,8 @@ void MainWindow::on_pushButton_clicked()
 
                     verify_code *vcode = new verify_code;
                     set_bool_dark_mode_verify_code(dark_mode);
+
+                    set_bool_save_r(r);
 
                     mailmail(Uemail);
                     vcode->show();
@@ -188,23 +191,25 @@ void MainWindow::on_pushButton_clicked()
             else
             {
 
-                check.exec("SELECT password FROM USER WHERE email='"+Uemail+"' AND password='"+Pass+"'");
+                check.exec("SELECT password,ID FROM USER WHERE email='"+Uemail+"' AND password='"+Pass+"'");
 
                 if(check.first())
                 {
+                    QString temp_temp_ID = check.value("ID").toString();
 
                     QSqlQuery v;
 
                     if(r)
                     {
                         v.exec("DELETE FROM userdb");
-                        v.exec("INSERT INTO userdb(email,password)VALUES('"+Uemail+"' , '"+Pass+"')");
+                        v.exec("INSERT INTO userdb(email,password,ID)VALUES('"+Uemail+"' , '"+Pass+"' , '"+temp_temp_ID+"')");
                     }
                     else
                     {
                         v.exec("DELETE FROM userdb");
                     }
 
+                    set_ID_from_LOGIN(temp_temp_ID);
                     set_dark_mode_main_page(dark_mode);
                     main_page *mainp = new main_page;
 

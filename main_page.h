@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 void set_dark_mode_main_page(bool g);
+void set_ID_from_LOGIN(QString g);
 
 namespace Ui {
 class main_page;
@@ -22,6 +23,28 @@ private slots:
     void set_color();
 
     void on_pushButton_clicked();
+
+    void on_next_pushbutton_clicked();
+
+    void on_previous_pushbutton_clicked();
+
+    void on_serach_button_clicked();
+
+    void on_pushButton_2_clicked();
+
+    void on_me_button_clicked();
+
+    void on_profile_clicked();
+
+    void on_mynetwork_button_clicked();
+
+    void on_job_button_clicked();
+
+    void on_message_button_clicked();
+
+    void on_comment_clicked();
+
+    void on_like_button_clicked();
 
 private:
     Ui::main_page *ui;
