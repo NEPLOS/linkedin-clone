@@ -51,11 +51,6 @@ my_network::my_network(QWidget *parent) :
 
     if(QFile::exists("content/"+usre_id_my_network+"/res/pic/0.png"))
     {
-
-        //QPixmap ui_res(:);
-        //QPixmap scaled_pixmap = ui_res.scaled(381, 171, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-        //ui->res_lable->setPixmap(scaled_pixmap);
-
         ui->me_button->setIcon(QIcon("content/"+usre_id_my_network+"/res/pic/0.png"));
     }
     else
@@ -367,4 +362,3 @@ void my_network::on_decline_button_1_clicked()
 
 
 }
-

@@ -251,82 +251,82 @@ void search_job_form_com()
 {
 
     QSqlDatabase data_base_job_company = QSqlDatabase::addDatabase("QSQLITE", "company_job_db");
-        QString jobDbPath = QDir::currentPath() + "/content/" + ma_com_ID + "/job.db";
-        data_base_job_company.setDatabaseName(jobDbPath);
+    QString jobDbPath = QDir::currentPath() + "/content/" + ma_com_ID + "/job.db";
+    data_base_job_company.setDatabaseName(jobDbPath);
 
-        if (data_base_job_company.open())
+    if (data_base_job_company.open())
+    {
+        qDebug() << "Opened job database at:" << jobDbPath;
+
+        QSqlQuery qqq(data_base_job_company);
+        if (qqq.exec("SELECT user_id, job_title FROM job_db LIMIT 1"))
         {
-            qDebug() << "Opened job database at:" << jobDbPath;
-
-            QSqlQuery qqq(data_base_job_company);
-            if (qqq.exec("SELECT user_id, job_title FROM job_db LIMIT 1"))
+            if (qqq.first())
             {
-                if (qqq.first())
-                {
-                    Glonal_job_title = qqq.value("job_title").toString();
-                    current_user = qqq.value("user_id").toString();
-                    qDebug() << "Job title:" << Glonal_job_title << ", User ID:" << current_user;
-                }
-                else
-                {
-                    qDebug() << "No rows returned from job_db.";
-                }
+                Glonal_job_title = qqq.value("job_title").toString();
+                current_user = qqq.value("user_id").toString();
+                qDebug() << "Job title:" << Glonal_job_title << ", User ID:" << current_user;
             }
             else
             {
-                qDebug() << "Can't SELECT user_id FROM job_db:" << qqq.lastError().text();
+                qDebug() << "No rows returned from job_db.";
             }
-
-            data_base_job_company.close();
         }
         else
         {
-            qDebug() << "Failed to open company job database:" << data_base_job_company.lastError().text();
+            qDebug() << "Can't SELECT user_id FROM job_db:" << qqq.lastError().text();
         }
 
-        QSqlDatabase search_the_job = QSqlDatabase::addDatabase("QSQLITE", "linkedin_db");
-        QString linkedinDbPath = QDir::currentPath() + "/linkedin_c.db";
-        search_the_job.setDatabaseName(linkedinDbPath);
-
-        if (search_the_job.open())
-        {
-            qDebug() << "Opened LinkedIn database at:" << linkedinDbPath;
-
-            QSqlQuery stj(search_the_job);
-            if (stj.exec("SELECT first_name, last_name, email, skill, company, Bio FROM user WHERE ID='" + current_user + "'") && stj.first())
-            {
-                if(stj.first())
-                {
-                    Glonal_first_name = stj.value("first_name").toString();
-                    Glonal_last_name = stj.value("last_name").toString();
-                    Glonal_skills = stj.value("skill").toString();
-                    Glonal_email = stj.value("email").toString();
-                    Glonal_bio = stj.value("Bio").toString();
-                    Glonal_company = stj.value("company").toString();
-                    qDebug() << "User info retrieved. First name:" << Glonal_first_name;
-                }
-                else
-                {
-                    Glonal_first_name = "none";
-                    Glonal_last_name = "none";
-                    Glonal_skills = "none";
-                    Glonal_email = "none";
-                    Glonal_bio = "none";
-                    Glonal_company = "none";
-                }
-            }
-            else
-            {
-                qDebug() << "Can't SELECT user info FROM user:" << stj.lastError().text();
-            }
-
-            search_the_job.close();
-        }
-        else
-        {
-            qDebug() << "Failed to open LinkedIn database:" << search_the_job.lastError().text();
-        }
+        data_base_job_company.close();
     }
+    else
+    {
+        qDebug() << "Failed to open company job database:" << data_base_job_company.lastError().text();
+    }
+
+    QSqlDatabase search_the_job = QSqlDatabase::addDatabase("QSQLITE", "linkedin_db");
+    QString linkedinDbPath = QDir::currentPath() + "/linkedin_c.db";
+    search_the_job.setDatabaseName(linkedinDbPath);
+
+    if (search_the_job.open())
+    {
+        qDebug() << "Opened LinkedIn database at:" << linkedinDbPath;
+
+        QSqlQuery stj(search_the_job);
+        if (stj.exec("SELECT first_name, last_name, email, skill, company, Bio FROM user WHERE ID='" + current_user + "'") && stj.first())
+        {
+            if(stj.first())
+            {
+                Glonal_first_name = stj.value("first_name").toString();
+                Glonal_last_name = stj.value("last_name").toString();
+                Glonal_skills = stj.value("skill").toString();
+                Glonal_email = stj.value("email").toString();
+                Glonal_bio = stj.value("Bio").toString();
+                Glonal_company = stj.value("company").toString();
+                qDebug() << "User info retrieved. First name:" << Glonal_first_name;
+            }
+            else
+            {
+                Glonal_first_name = "none";
+                Glonal_last_name = "none";
+                Glonal_skills = "none";
+                Glonal_email = "none";
+                Glonal_bio = "none";
+                Glonal_company = "none";
+            }
+        }
+        else
+        {
+            qDebug() << "Can't SELECT user info FROM user:" << stj.lastError().text();
+        }
+
+        search_the_job.close();
+    }
+    else
+    {
+        qDebug() << "Failed to open LinkedIn database:" << search_the_job.lastError().text();
+    }
+}
 
 
 void job_form_company::on_home_button_clicked()

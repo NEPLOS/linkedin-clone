@@ -2,6 +2,7 @@
 #define MAIN_PAGE_H
 
 #include <QMainWindow>
+#include <QMediaPlayer>
 
 void set_dark_mode_main_page(bool g);
 void set_ID_from_LOGIN(QString g);
@@ -20,7 +21,7 @@ public:
 
 private slots:
 
-    void set_color();
+    void set_color(char c);
 
     void on_pushButton_clicked();
 
@@ -46,7 +47,11 @@ private slots:
 
     void on_like_button_clicked();
 
+    void on_audio_clicked();
+
 private:
+    QMediaPlayer *mediaPlayer;
+    QVideoWidget *videoWidget;
     Ui::main_page *ui;
 };
 

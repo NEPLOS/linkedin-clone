@@ -411,7 +411,10 @@ void job_form::on_me_button_clicked()
 
 void job_form::on_pushButton_clicked()
 {
-    QSqlQuery q;
+
+    QSqlDatabase data_base_job_company = QSqlDatabase::addDatabase("QSQLITE", "job_message_company_job_db");
+    data_base_job_company.setDatabaseName(QDir::currentPath() + "/linkedin_C.db");
+    QSqlQuery q(data_base_job_company);
     q.exec("DELETE FROM userdb");
 
     welcome *t = new welcome;
@@ -430,6 +433,8 @@ void job_form::on_mynetwork_button_clicked()
 
 void job_form::on_message_button_clicked()
 {
+    get_the_user_ID(job_page_user_ID);
+    //job_page_user_ID
     message_contact* n = new message_contact;
     n->show();
     this->close();

@@ -115,6 +115,46 @@ message_with_user::message_with_user(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    //user_user_user_ID
+
+    QString e;
+    if(QFile::exists(QDir::currentPath() + "/content/" + user_user_user_ID + "/res/pic/0.png"))
+    {
+        e = QDir::currentPath() + "/content/" + user_user_user_ID + "/res/pic/0.png";
+    }
+    else
+    {
+        e = QDir::currentPath() + "/content/" + user_user_user_ID + "/res/pic/0.jpg";
+    }
+    QPixmap ui_res(e);
+    QPixmap scaled_pixmap = ui_res.scaled(41, 41, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    ui->profile->setPixmap(scaled_pixmap);
+
+    QSqlDatabase database_username = QSqlDatabase::addDatabase("QSQLITE", "message_for_username_2_0");
+    database_username.setDatabaseName(QDir::currentPath() + "/linkedin_C.db");
+    database_username.open();
+    if(!database_username.isOpen())
+    {
+        qDebug() << "database is not open ";
+    }
+    QSqlQuery d(database_username);
+
+    if(!d.exec("SELECT first_name , last_name FROM USER WHERE ID='"+user_user_user_ID+"'"))
+    {
+        qDebug() << "cant select : " << d.lastError().text();
+    }
+
+    QString fn;
+    QString ln;
+
+    if(d.first())
+    {
+        fn = d.value("first_name").toString();
+        ln = d.value("last_name").toString();
+    }
+
+    ui->user_name->setText(fn + ' ' + ln);
+
     add_scroll_area();
 
 }

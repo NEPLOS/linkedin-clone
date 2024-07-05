@@ -55,12 +55,23 @@ inline void make_content(std::string addres)
 
 inline void make_data(std::string addres)
 {
-    std::ofstream a((addres + "\\i_follow.db").c_str());
-    a.close();
-    std::ofstream b((addres + "\\they_follow.db").c_str());
+    std::ofstream b((addres + "/connections.db").c_str());
     b.close();
-    std::ofstream c((addres + "\\personal.db").c_str());
+    std::ofstream c((addres + "/personal.db").c_str());
     c.close();
+
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE","make_the_follow");
+
+    db.setDatabaseName(QString::fromStdString(addres) + "/connections.db");
+    db.open();
+
+    QSqlQuery q(db);
+
+    if (!q.exec("CREATE TABLE IF NOT EXISTS follow(user_id TEXT)"))
+    {
+        qDebug() << "Failed to create pending table:" << q.lastError().text();
+    }
+
 }
 
 void file(std::string a , std::string path , std::string ID)

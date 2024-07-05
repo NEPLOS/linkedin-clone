@@ -16,6 +16,7 @@
 #include "QMessageBox"
 #include "main_page.h"
 #include <direct.h>
+#include "fstream"
 #include <sys/stat.h>
 #include <QPixmap>
 #include <QDir>
@@ -37,6 +38,18 @@ profile::profile(QWidget *parent) :
     ui->setupUi(this);
     ui->comboBox->addItem("Light");
     ui->comboBox->addItem("Dark");
+
+    std::ifstream dd("is_dark.txt");
+    std::string ddd;
+    dd >> ddd;
+    if(ddd == "1")
+    {
+        ui->comboBox->setCurrentIndex(1);
+    }
+    else
+    {
+        ui->comboBox->setCurrentIndex(0);
+    }
 
     ui->switch_mode->addItem("Normal user");
     ui->switch_mode->addItem("company");
@@ -493,6 +506,21 @@ void profile::on_serach_button_clicked()
     {
         QMessageBox::information(this,"Search name ","The name is not exsict " , "ok");
         ui->search->setText("");
+    }
+}
+
+
+void profile::on_comboBox_currentIndexChanged(int index)
+{
+    if(index == 0)
+    {
+        std::ofstream d("is_dark.txt");
+        d << '0';
+    }
+    else
+    {
+        std::ofstream d("is_dark.txt");
+        d << '1';
     }
 }
 

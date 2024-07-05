@@ -3,6 +3,10 @@
 
 #include <QWidget>
 #include <QString>
+#include <QDialog>
+#include <QMediaPlayer>
+#include <QVideoWidget>
+#include <QPushButton>
 
 void get_the_ID(QString ID);
 
@@ -35,7 +39,21 @@ private slots:
 
     void on_connect_button_clicked();
 
+    void on_comment_clicked();
+
+    void on_next_clicked();
+
+    void on_previous_clicked();
+
+    void on_audio_clicked();
+
+    void on_like_clicked();
+
+    void on_share_clicked();
+
 private:
+    QMediaPlayer *mediaPlayer;
+    QVideoWidget *videoWidget;
     Ui::view_profile *ui;
 };
 

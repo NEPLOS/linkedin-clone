@@ -38,6 +38,12 @@ private slots:
 
     void on_message_button_clicked();
 
+    void on_play_clicked();
+
+    void on_pause_clicked();
+
+    void on_user_mod_currentIndexChanged(int index);
+
 private:
     QMediaPlayer *mediaPlayer;
     QVideoWidget *videoWidget;

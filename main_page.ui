@@ -348,6 +348,19 @@
       <string/>
      </property>
     </widget>
+    <widget class="QPushButton" name="audio">
+     <property name="geometry">
+      <rect>
+       <x>370</x>
+       <y>410</y>
+       <width>80</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Play / Pause</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QPushButton" name="pushButton_2">
     <property name="geometry">

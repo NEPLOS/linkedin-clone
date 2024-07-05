@@ -9,11 +9,15 @@
 #include "QSqlDriver"
 #include "QMessageBox"
 #include "QSqlQuery"
+#include <QVideoWidget>
 #include <QMediaPlayer>
 #include <QVideoWidget>
 #include <QPushButton>
+#include <QVideoWidget>
 #include "QSqlError"
 #include <QFile>
+#include <QMediaPlayer>
+#include <QVideoWidget>
 #include "qdebug.h"
 #include <string>
 #include <QWidget>
@@ -31,6 +35,7 @@
 
 
 QString Global_file_path;
+QString ID_POST_SEND;
 
 QString search(QString input);
 
@@ -50,6 +55,10 @@ send_post::send_post(QWidget *parent) :
     ui->message_button->setIcon(QIcon("icons/speech-bubble-line-icon.png"));
     ui->me_button->setIcon(QIcon("icons/person-profile-image-icon.png"));
 
+    ui->user_mod->addItem("user");
+    ui->user_mod->addItem("company");
+    ui->user_mod->setCurrentIndex(0);
+
     QString database_path = QDir::currentPath();
 
     database_path = database_path + "/linkedin_C.db";
@@ -57,6 +66,11 @@ send_post::send_post(QWidget *parent) :
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(database_path);
     db.open();
+
+    ui->play->hide();
+    ui->pause->hide();
+    ui->play->setEnabled(0);
+    ui->pause->setEnabled(0);
 }
 
 send_post::~send_post()
@@ -115,7 +129,7 @@ void send_post::on_Upload_button_clicked()
         }
 
         QString database_path = QDir::currentPath();
-        database_path = database_path + "/content/" + user_id;
+        database_path = database_path + "/content/" + ID_POST_SEND;
 
         QString post_data_base_path = database_path +  + "/post.db";
         QString like_data_base_path = database_path +  + "/like.db";
@@ -157,7 +171,7 @@ void send_post::on_Upload_button_clicked()
         //databaseQuery.exec("INSERT INTO postdata(senderID,Contenttext,ContentPicture,ContentVideo,day,month,year,hour,minute,second,PostID,Repostedcounter)VALUES('"+post.get_sender_ID()+"' , '"+post.get_content_text()+"' , '"+post.get_content_Picture()+"' , '"+post.get_content_Video()+"' , '"+post.get_time_send().get_day()+"' , '"+post.get_time_send().get_month()+"' , '"+post.get_time_send().get_year()+"' , '"+post.get_time_send().get_hour()+"' , '"+post.get_time_send().get_minute()+"' , '"+post.get_time_send().get_second()+"' , '"+post.get_Post_ID()+"' , '"+post.get_Responset_counter()+"')"))
         // ContentAudio
         databaseQuery.exec("INSERT INTO postdata(PostID)VALUES('"+post.get_Post_ID()+"')");
-        databaseQuery.exec("UPDATE postdata SET senderID='"+post.get_Post_ID()+"' WHERE PostID='"+post.get_Post_ID()+"'");
+        databaseQuery.exec("UPDATE postdata SET senderID='"+post.get_sender_ID()+"' WHERE PostID='"+post.get_Post_ID()+"'");
         databaseQuery.exec("UPDATE postdata SET ContentText='"+post.get_content_text()+"' WHERE PostID='"+post.get_Post_ID()+"'");
         databaseQuery.exec("UPDATE postdata SET ContentPicture='"+post.get_content_Picture()+"' WHERE PostID='"+post.get_Post_ID()+"'");
         databaseQuery.exec("UPDATE postdata SET ContentVideo='"+post.get_content_Video()+"' WHERE PostID='"+post.get_Post_ID()+"'");
@@ -262,33 +276,65 @@ void send_post::on_post_clicked()
 
     QString format = file_path_info.suffix();
 
+    if(ui->play->isEnabled())
+    {
+        delete mediaPlayer;
+    }
+
     if((format == "jpeg" || format == "jpg" || format == "png"))
     {
         ui->address->setText(file_path);
         QPixmap ui_res(file_path);
         QPixmap scaled_pixmap = ui_res.scaled(381, 171, Qt::KeepAspectRatio, Qt::SmoothTransformation);
         ui->res_lable->setPixmap(scaled_pixmap);
+        ui->play->hide();
+        ui->pause->hide();
+        ui->play->setEnabled(0);
+        ui->pause->setEnabled(0);
+        /*
+        if(mediaPlayer != nullptr)
+        {
+            mediaPlayer->pause();
+            mediaPlayer->setVolume(0);
+            delete  mediaPlayer;
+            mediaPlayer = nullptr;
+        }
+        */
     }
     else if(format == "mp4" || format == "mov")
     {
-        mediaPlayer = new QMediaPlayer(this);
-        videoWidget = new QVideoWidget(this);
-
-        mediaPlayer->setVideoOutput(videoWidget);
-        videoWidget->setGeometry(170, 180, 381, 171);
-        videoWidget->show();
-
-        mediaPlayer->setMedia(QUrl::fromLocalFile(file_path));
-        mediaPlayer->play();
+        /*
+        QWidget *widget = new QWidget;
+        widget->resize(400, 300);
+        QMediaPlayer *player = new QMediaPlayer;
+        QVideoWidget *vw = new QVideoWidget;
+        player->setVideoOutput(vw);
+        player->setMedia(QUrl::fromLocalFile("/home/pi/Videos/tomtiph.mp4"));                                                               idk why but not working
+        vw->show();
+        player->setVolume(50);
+        player->play();
+        widget->show();
+        qDebug() << "mediaStatus: " << player->mediaStatus() << "error: " << player->error();
+        //mediaPlayer->setMedia(QUrl::fromLocalFile("/path/to/your/video.mp4"));
+        */
         ui->address->setText(file_path);
+       // ui->play->show();
+        //ui->pause->show();
+       // ui->play->setEnabled(1);
+        //ui->pause->setEnabled(1);
     }
     else if(format == "mp3" || format == "wav")
     {
         ui->address->setText(file_path);
-        QMediaPlayer *player = new QMediaPlayer(this);
-        player->setMedia(QUrl::fromLocalFile(file_path));
-        player->setVolume(50);
-        player->play();
+        mediaPlayer = new QMediaPlayer(this);
+        mediaPlayer->setMedia(QUrl::fromLocalFile(file_path));
+        mediaPlayer->setVolume(40);
+        mediaPlayer->play();
+        ui->play->show();
+        ui->pause->show();
+        ui->play->setEnabled(1);
+        ui->pause->setEnabled(1);
+        ui->res_lable->clear();
     }
 }
 
@@ -389,5 +435,61 @@ void send_post::on_message_button_clicked()
     message_contact* n = new message_contact;
     n->show();
     this->close();
+}
+
+
+void send_post::on_play_clicked()
+{
+    mediaPlayer->play();
+}
+
+
+void send_post::on_pause_clicked()
+{
+    mediaPlayer->pause();
+}
+
+void send_post::on_user_mod_currentIndexChanged(int index)
+{
+
+    if(index == 0)
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE","dbdbdb");
+        db.setDatabaseName(QDir::currentPath() + "/linkedin_C.db");
+        db.open();
+
+        QSqlQuery q(db);
+
+        q.exec("SELECT ID FROM userdb");
+        if(q.first())
+        {
+            QString temp = q.value("ID").toString();
+            ID_POST_SEND = temp;
+        }
+    }
+    else
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE","dbdbdb");
+        db.setDatabaseName(QDir::currentPath() + "/linkedin_C.db");
+        db.open();
+
+        QSqlQuery q(db);
+
+        q.exec("SELECT IDC FROM userdb");
+        if(q.first())
+        {
+            QString temp = q.value("IDC").toString();
+            if(temp.size() == 0 || temp == "")
+            {
+                QMessageBox::warning(this,"error","you don't have any company , make one in the me menu","ok");
+                ui->user_mod->setCurrentIndex(0);
+            }
+            else
+            {
+                ID_POST_SEND = temp;
+            }
+        }
+    }
+
 }
 

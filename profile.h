@@ -40,6 +40,8 @@ private slots:
 
     void on_serach_button_clicked();
 
+    void on_comboBox_currentIndexChanged(int index);
+
 private:
     Ui::profile *ui;
 };
