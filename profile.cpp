@@ -13,6 +13,8 @@
 #include "welcome.h"
 #include "mainwindow.h"
 #include "main_page.h"
+#include "message_contact.h"
+#include "message_with_user.h"
 #include "QMessageBox"
 #include "main_page.h"
 #include <direct.h>
@@ -59,7 +61,6 @@ profile::profile(QWidget *parent) :
     ui->make_company->hide();
 
     ui->home_button->setIcon(QIcon("icons/Home.jpg"));
-    //ui->me_button->setIcon(QIcon("icons/person-profile-image-icon.png"));
     ui->notif_button->setIcon(QIcon("icons/bell-line-icon.png"));
     ui->pushButton_3->setIcon(QIcon("icons/logout-line-icon.png"));
     ui->serach_button->setIcon(QIcon("icons/search-line-icon.png"));
@@ -99,7 +100,7 @@ profile::profile(QWidget *parent) :
 
     QString path = QDir::currentPath();
 
-    path = path + "/content/" + ID + "/res/pic/0."; // 0.png";
+    path = path + "/content/" + ID + "/res/pic/0.";
     QFileInfo file_info(path + "png");
     if(file_info.exists())
     {
@@ -182,7 +183,7 @@ void profile::on_Edit_profile_button_clicked()
     if(info.suffix() == "png" || info.suffix() == "jpg")
     {
         QString path = QDir::currentPath();
-        path = path + "/content/" + ID + "/res/pic/0."; // + info.suffix();
+        path = path + "/content/" + ID + "/res/pic/0.";
         QFile::remove(path + "png");
         QFile::remove(path + "jpg");
         path = path + info.suffix();
@@ -306,12 +307,10 @@ void profile::on_switch_mode_currentIndexChanged(int index)
 
         ID = ID + "C";
 
-        //QString company_id = "";
-
         q.exec("SELECT ID FROM USER WHERE ID='"+ID+"'");
         if(q.first())
         {
-            //ID = q.value(0).toString();
+
         }
 
 
@@ -371,7 +370,6 @@ void profile::on_switch_mode_currentIndexChanged(int index)
         }
 
         ui->name->setText(name_company);
-        //ui->lastname->setText(lastName);
         ui->label_5->hide();
         ui->lastname->setText("");
         ui->bio->setText(bio);
@@ -398,7 +396,7 @@ void profile::on_switch_mode_currentIndexChanged(int index)
 
         QString path = QDir::currentPath();
 
-        path = path + "/content/" + ID + "/res/pic/0."; // 0.png";
+        path = path + "/content/" + ID + "/res/pic/0.";
         QFileInfo file_info(path + "png");
         if(file_info.exists())
         {
@@ -522,5 +520,14 @@ void profile::on_comboBox_currentIndexChanged(int index)
         std::ofstream d("is_dark.txt");
         d << '1';
     }
+}
+
+
+void profile::on_message_button_clicked()
+{
+    get_the_user_ID(ID);
+    message_contact* n = new message_contact;
+    n->show();
+    this->close();
 }
 

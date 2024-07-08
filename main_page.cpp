@@ -642,7 +642,7 @@ void main_page::on_message_button_clicked()
 
 void main_page::on_comment_clicked()
 {
-    get_the_id(HOME_ID,POST_ID , MY_ID_HOME_PAGE);
+    get_the_id(POST_ID,HOME_ID , MY_ID_HOME_PAGE);
     comments* d = new comments;
     d->show();
 }

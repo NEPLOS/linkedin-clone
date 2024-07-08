@@ -216,6 +216,7 @@ void my_network::on_serach_button_clicked()
 
 void my_network::on_message_button_clicked()
 {
+    get_the_user_ID(usre_id_my_network);
     message_contact* n = new message_contact;
     n->show();
     this->close();

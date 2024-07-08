@@ -291,15 +291,6 @@ void send_post::on_post_clicked()
         ui->pause->hide();
         ui->play->setEnabled(0);
         ui->pause->setEnabled(0);
-        /*
-        if(mediaPlayer != nullptr)
-        {
-            mediaPlayer->pause();
-            mediaPlayer->setVolume(0);
-            delete  mediaPlayer;
-            mediaPlayer = nullptr;
-        }
-        */
     }
     else if(format == "mp4" || format == "mov")
     {
