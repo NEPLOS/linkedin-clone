@@ -6,6 +6,7 @@
 #include <QIntValidator>
 #include <fill_the_form.h>
 #include <main_page.h>
+#include <QDir>
 
 int a;
 bool acc_have;
@@ -17,8 +18,6 @@ verify_code::verify_code(QWidget *parent) :
 {
 
     ui->setupUi(this);
-
-    this->setWindowTitle("Verify code");
 
     srand(time(NULL));
 

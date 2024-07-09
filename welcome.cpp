@@ -3,8 +3,10 @@
 #include "mainwindow.h"
 #include "fill_the_form.h"
 #include "main_page.h"
+#include <fstream>
 #include "verify_code.h"
 #include "QDate"
+#include <QDir>
 
 bool have_dark_mode_welcome = false;
 
@@ -13,13 +15,24 @@ welcome::welcome(QWidget *parent) :
     ui(new Ui::welcome)
 {
     ui->setupUi(this);
-    this->setWindowTitle("Welcome");
     ui->comboBox->addItem("Light");
     ui->comboBox->addItem("Dark");
     setMaximumSize(1167,600);
     setMinimumSize(1167,600);
     QString s= QDate::currentDate().toString();
     ui->date_lable->setText(s);
+    std::string color;
+    std::ifstream color_theme("is_dark.txt");
+    color_theme >> color;
+    if(color == "1")
+    {
+        on_comboBox_activated(1);
+    }
+    else
+    {
+        on_comboBox_activated(0);
+    }
+
 }
 
 welcome::~welcome()
@@ -57,6 +70,8 @@ void welcome::on_comboBox_activated(int index)
         have_dark_mode_welcome = true;
         set_bool_dark_mode_mainwindows(true);
         set_bool_dark_mode_verify_code(true);
+        std::ofstream color_them("is_dark.txt");
+        color_them  << 1;
 
     }
     else
@@ -78,6 +93,8 @@ void welcome::on_comboBox_activated(int index)
         have_dark_mode_welcome = false;
         set_bool_dark_mode_mainwindows(false);
         set_bool_dark_mode_verify_code(false);
+        std::ofstream color_them("is_dark.txt");
+        color_them  << 0;
     }
 
 }

@@ -3,12 +3,15 @@
 
 #include <QMainWindow>
 
+//void set_bool_save_r(bool b);
+
 namespace Ui {
 class fill_the_form;
 }
 
 void mailmail(QString hmm);
 void set_dark_mode_fill_the_form(bool n);
+void set_bool_save_r(bool b);
 
 class fill_the_form : public QMainWindow
 {
@@ -30,7 +33,6 @@ private slots:
     void on_job_box_activated(int index);
 
     void on_uni_box_activated(int index);
-
 
 private:
 

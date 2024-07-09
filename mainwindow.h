@@ -16,7 +16,7 @@ class MainWindow : public QMainWindow
 public:
 
     bool have_dark_mode_mainwindows = false;
-
+    void setCirclePosition(const QPoint &pos);
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
@@ -33,7 +33,6 @@ private slots:
     void on_hide_pass_clicked();
 
 private:
-
     Ui::MainWindow *ui;
 };
 #endif // MAINWINDOW_H
